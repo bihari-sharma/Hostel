@@ -437,7 +437,7 @@ nav a:hover {
   }
 }
 
-.site-footer {
+.footer {
   position: fixed;
   left: 0;
   right: 0;
@@ -448,5 +448,3 @@ nav a:hover {
   color:#fff;
   z-index: 999;
 }
-.site-main { padding-bottom: 70px; /* leave space so content isn't hidden behind footer */ }
-
