@@ -9,7 +9,6 @@
 <style>
   body{
     background-image: url(images/host.jpg); background-position: center; background-size: cover;
-    background-repeat: no-repeat;
   }
 </style>
 <body>
@@ -130,30 +129,7 @@
     });
   </script>
 
-
-<script>
-  const navToggle = document.getElementById('navToggle');
-  const navMenu = document.getElementById('navMenu');
-
-  function toggleMenu() {
-    navMenu.classList.toggle('show');
-    // optional: change toggle icon to X
-    navToggle.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
-  }
-
-  // bind click
-  navToggle.addEventListener('click', toggleMenu);
-
-  // close menu when clicking a link (mobile)
-  navMenu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      navMenu.classList.remove('show');
-      navToggle.textContent = '☰';
-    }
-  });
-</script>
-
-   <footer class="footer">
+  <footer class="footer">
     <div class="footer-container">
 
         <div class="footer-column">
@@ -192,8 +168,33 @@
         © 2025 Hostel Management System. All Rights Reserved.
     </div>
 </footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  function toggleMenu() {
+    navMenu.classList.toggle('show');
+    // optional: change toggle icon to X
+    navToggle.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
+  }
+
+  // bind click
+  navToggle.addEventListener('click', toggleMenu);
+
+  // close menu when clicking a link (mobile)
+  navMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      navMenu.classList.remove('show');
+      navToggle.textContent = '☰';
+    }
+  });
+</script>
+
+   
 </body>
 </html>
+
 
 
 
