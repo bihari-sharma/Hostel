@@ -436,3 +436,17 @@ nav a:hover {
     grid-template-columns: 1fr; /* Mobile – 1 card per row */
   }
 }
+
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  line-height: 56px; /* vertical center */
+  background:#0b4f6c;
+  color:#fff;
+  z-index: 999;
+}
+.site-main { padding-bottom: 70px; /* leave space so content isn't hidden behind footer */ }
+
