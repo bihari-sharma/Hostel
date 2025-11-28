@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About Us</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+  body{
+    background-image: url(/images/host.jpg); background-position: center; background-size: cover;
+  }
+  .form-section {
+    background: rgba(255, 255, 255, 1) !important; /* 20% white */
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+}
+</style>
+<body>
+<header>
+  <h1>Hostel Management System</h1>
+  <p>Welcome to the official student registration portal</p>
+</header>
+<nav class="navbar">
+  <div class="nav-left">HM</div>
+
+  <!-- Mobile Menu Icon -->
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+
+  <ul class="nav-links" id="navMenu" role="menu">
+    <li role="menuitem"><a href="index.html">Home</a></li>
+    <li role="menuitem"><a href="student_registration.html">Student Registration</a></li>
+    <li role="menuitem"><a href="admin.html">Admin Panel</a></li>
+    <li role="menuitem"><a href="contact.html">Contact Us</a></li>
+    <li role="menuitem"><a href="about.html">About Us</a></li>
+  </ul>
+</nav>
+
+<!-- ======= About Header Section ======= -->
+<section class="about-section">
+    <h2>About Our Hostel</h2>
+
+    <div class="cards-container">
+
+        <div class="about-card">
+            <h3>Comfortable Rooms</h3>
+            <p>We offer spacious, well-ventilated, fully-furnished rooms with study tables and storage.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>High-Speed Internet</h3>
+            <p>The hostel has fast Wi-Fi for classes, research, work, and entertainment.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Nutritious Meals</h3>
+            <p>Healthy vegetarian & non-vegetarian meals served daily.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>24/7 Security</h3>
+            <p>Equipped with CCTV and trained security staff for student safety.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Clean Bathrooms</h3>
+            <p>Rooms and washrooms cleaned regularly to ensure hygiene.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Recreation Areas</h3>
+            <p>Common TV room, study area, indoor games, open seating.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Medical Support</h3>
+            <p>First aid and quick access to nearby hospitals.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Feels Like Home</h3>
+            <p>A peaceful and friendly atmosphere for learning & growth.</p>
+        </div>
+
+    </div>
+</section>
+
+  <footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-column">
+            <h3>Hostel Management System</h3>
+            <p>Providing safe, comfortable and well-maintained hostel facilities to support students in their academic journey.</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Quick Links</h3>
+            <a href="index.html">Home</a>
+            <a href="student_registration.html">Student Registration</a>
+            <a href="admin.html">Admin Panel</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Contact Info</h3>
+            <p>Email: amarjeetsaxena2003@gmail.com</p>
+            <p>Phone: +91 9876543210</p>
+            <p>Address: College Campus, India</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/aj._.sharma._.2.0?igsh=MThsZ3IydDVrcDc3ZQ=="><img src="images/Instagram_icon.png" alt=""></a>
+                <a href="https://www.linkedin.com/in/bihari-sharma-2b5ab736a"><img src="images/LinkedIn_logo_initials.png" alt=""></a>
+                <a href="https://github.com/bihari-sharma"><img src="images/github.png" alt=""></a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Hostel Management System. All Rights Reserved.
+    </div>
+</footer>
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  function toggleMenu() {
+    navMenu.classList.toggle('show');
+    // optional: change toggle icon to X
+    navToggle.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
+  }
+
+  // bind click
+  navToggle.addEventListener('click', toggleMenu);
+
+  // close menu when clicking a link (mobile)
+  navMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      navMenu.classList.remove('show');
+      navToggle.textContent = '☰';
+    }
+  });
+</script>
+</body>
+</html>

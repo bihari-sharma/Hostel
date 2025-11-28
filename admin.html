@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Hostel</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<style>
+  body{
+    background-image: url(/images/host.jpg); background-position: center; background-size: cover;
+  }
+  .form-section {
+    background: rgba(255, 255, 255, 1) !important; /* 20% white */
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+}
+</style>
+<body>
+  <header>
+    <h1>Hostel Management System</h1>
+    <p>Admin Panel</p>
+  </header>
+
+ <nav class="navbar">
+  <div class="nav-left">HM</div>
+
+  <!-- Mobile Menu Icon -->
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+
+  <ul class="nav-links" id="navMenu" role="menu">
+    <li role="menuitem"><a href="index.html">Home</a></li>
+    <li role="menuitem"><a href="student_registration.html">Student Registration</a></li>
+    <li role="menuitem"><a href="admin.html">Admin Panel</a></li>
+    <li role="menuitem"><a href="contact.html">Contact Us</a></li>
+    <li role="menuitem"><a href="about.html">About Us</a></li>
+  </ul>
+</nav>
+
+  <div class="form-section card auth-card" id="authSection">
+    <h2>Admin Login</h2>
+    <label for="adminEmail">Email*</label>
+    <input id="adminEmail" type="email" placeholder="Enter your email"/>
+    <label for="adminPassword">Password*</label>
+    <input id="adminPassword" type="password" placeholder="Enter your password"/>
+    <button id="loginBtn" class="btn">Login</button>
+    <div id="authMsg" style="margin-top:10px;color:#a33;"></div>
+  </div>
+
+  <section id="dashboard" class="form-section card" style="display:none;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Registered Students</h2>
+      <div>
+        <button id="logoutBtn" class="btn" style="background:#ff3b30">Logout</button>
+      </div>
+    </div>
+
+    <div id="listContainer" style="margin-top:12px;">
+      <!-- SEARCH BAR JUST ABOVE TABLE -->
+<div class="table-search-container">
+    <input type="text" id="searchInput" class="table-search" 
+           placeholder="🔍 Search student by name, roll, email, phone, hostel, room...">
+</div>
+
+      <table class="table" id="studentsTable">
+        <thead><tr><th>s.no.</th><th>Name</th><th>Roll</th><th>Email</th><th>Phone</th><th>Hostel</th><th>Room</th><th>Year</th><th>Registered At</th><th>Edit/Delete</th></tr></thead>
+        <tbody id="studentsTbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script type="module">
+/* ====== Replace with your Firebase config ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBzq69fGQIEdFPDeUn34qOLrvSmiEqxtrM",
+  authDomain: "hostel-management-system-caaf0.firebaseapp.com",
+  projectId: "hostel-management-system-caaf0",
+  storageBucket: "hostel-management-system-caaf0.firebasestorage.app",
+  messagingSenderId: "67188186768",
+  appId: "1:67188186768:web:94cdf87da44b0a573b4215"
+};
+/* ============================================== */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// UI elems
+const authSection = document.getElementById('authSection');
+const dashboard = document.getElementById('dashboard');
+const authMsg = document.getElementById('authMsg');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const tbody = document.getElementById('studentsTbody');
+const searchInput = document.getElementById('searchInput');
+
+// Modal elems
+const editModal = document.getElementById('editModal');
+const closeModal = document.getElementById('closeModal');
+const cancelEdit = document.getElementById('cancelEdit');
+const editForm = document.getElementById('editForm');
+
+// in-memory
+let studentsData = [];
+
+// Auth handling
+loginBtn.addEventListener('click', async () => {
+  authMsg.textContent = '';
+  const email = document.getElementById('adminEmail').value;
+  const pass = document.getElementById('adminPassword').value;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    console.error('Login error:', err);
+    authMsg.textContent = 'Login failed. Check credentials.';
+  }
+});
+
+logoutBtn.addEventListener('click', async () => {
+  await signOut(auth);
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    authSection.style.display = 'none';
+    dashboard.style.display = 'block';
+    await loadStudents();
+  } else {
+    authSection.style.display = 'block';
+    dashboard.style.display = 'none';
+    studentsData = [];
+    tbody.innerHTML = '';
+  }
+});
+
+/* Load students */
+async function loadStudents(){
+  tbody.innerHTML = '<tr><td colspan="8">Loading...</td></tr>';
+  try {
+    const q = query(collection(db, 'students'), orderBy('created_at', 'desc'));
+    const snap = await getDocs(q);
+    studentsData = [];
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      studentsData.push({ id: docSnap.id, ...d });
+    });
+    renderStudents(studentsData);
+  } catch (err) {
+    console.error('Error loading students:', err);
+    tbody.innerHTML = '<tr><td colspan="8">Error loading data.</td></tr>';
+  }
+}
+
+/* Render students table with Edit/Delete buttons */
+function renderStudents(list){
+  if (!list || list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8">No results found.</td></tr>';
+    return;
+  }
+  let html = '';
+  let idx = 1;
+  for (const d of list) {
+    const createdAt = d.created_at && d.created_at.toDate ? d.created_at.toDate().toLocaleString() : (d.created_at && d.created_at.seconds ? new Date(d.created_at.seconds*1000).toLocaleString() : '');
+    html += `<tr>
+      <td>${idx++}</td>
+      <td>${escapeHtml(d.full_name||'')}</td>
+      <td>${escapeHtml(d.roll_no||'')}</td>
+      <td>${escapeHtml(d.email||'')}</td>
+      <td>${escapeHtml(d.phone||'')}</td>
+      <td>${escapeHtml(d.hostel||'')}</td>
+      <td>${escapeHtml(d.room_type||'')}</td>
+      <td>${escapeHtml(d.year||'')}</td>
+      <td>${escapeHtml(createdAt)}</td>
+      <td style="white-space:nowrap;">
+        <button class="btn" data-id="${d.id}" onclick="openEditModal(this.dataset.id)" style="margin-right:6px;background:#0b84ff;">Edit</button>
+        <button class="btn" data-id="${d.id}" onclick="confirmDelete(this.dataset.id)" style="background:#ff3b30;">Delete</button>
+      </td>
+    </tr>`;
+  }
+  tbody.innerHTML = html;
+}
+
+/* Escape */
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+/* Search filter */
+function applySearchFilter(q) {
+  const s = (q||'').trim().toLowerCase();
+  if (!s) return renderStudents(studentsData);
+  const filtered = studentsData.filter(d => {
+    const hay = `${d.full_name||''} ${d.roll_no||''} ${d.email||''} ${d.phone||''} ${d.hostel||''} ${d.room_type||''} ${d.year||''}`.toLowerCase();
+    return hay.indexOf(s) !== -1;
+  });
+  renderStudents(filtered);
+}
+
+function debounce(fn, wait=250){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(this,a), wait); }; }
+searchInput.addEventListener('input', debounce((e)=> applySearchFilter(e.target.value), 180));
+
+/* Delete flow */
+window.confirmDelete = async function(id) {
+  if (!confirm('Are you sure you want to delete this record? This action cannot be undone.')) return;
+  try {
+    await deleteDoc(doc(db, 'students', id));
+    // remove locally and re-render
+    studentsData = studentsData.filter(s => s.id !== id);
+    applySearchFilter(searchInput.value);
+  } catch (err) {
+    console.error('Delete error:', err);
+    alert('Could not delete. Check console.');
+  }
+};
+
+/* Edit flow - open modal and populate */
+window.openEditModal = function(id) {
+  const rec = studentsData.find(s => s.id === id);
+  if (!rec) { alert('Record not found'); return; }
+  document.getElementById('editId').value = rec.id || '';
+  document.getElementById('edit_full_name').value = rec.full_name || '';
+  document.getElementById('edit_roll_no').value = rec.roll_no || '';
+  document.getElementById('edit_email').value = rec.email || '';
+  document.getElementById('edit_phone').value = rec.phone || '';
+  document.getElementById('edit_hostel').value = rec.hostel || '';
+  document.getElementById('edit_room_type').value = rec.room_type || '';
+  // show modal
+  editModal.style.display = 'flex';
+};
+
+/* close modal handlers */
+closeModal.addEventListener('click', ()=> editModal.style.display='none');
+cancelEdit.addEventListener('click', ()=> editModal.style.display='none');
+window.addEventListener('click', (e)=> { if (e.target === editModal) editModal.style.display='none'; });
+
+/* Save edited data */
+editForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('editId').value;
+  const newData = {
+    full_name: document.getElementById('edit_full_name').value.trim(),
+    roll_no: document.getElementById('edit_roll_no').value.trim(),
+    email: document.getElementById('edit_email').value.trim(),
+    phone: document.getElementById('edit_phone').value.trim(),
+    hostel: document.getElementById('edit_hostel').value,
+    room_type: document.getElementById('edit_room_type').value
+  };
+  try {
+    const ref = doc(db, 'students', id);
+    await updateDoc(ref, newData);
+    // update local array
+    studentsData = studentsData.map(s => s.id === id ? { ...s, ...newData } : s);
+    applySearchFilter(searchInput.value);
+    editModal.style.display = 'none';
+    alert('Record updated successfully.');
+  } catch (err) {
+    console.error('Update error:', err);
+    alert('Could not update. Check console.');
+  }
+});
+</script>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeModal" class="modal-close">&times;</span>
+    <h3>Edit Student</h3>
+    <form id="editForm">
+      <input type="hidden" id="editId">
+      <label>Full Name</label>
+      <input id="edit_full_name" type="text" required>
+
+      <label>Roll No</label>
+      <input id="edit_roll_no" type="text" required>
+
+      <label>Email</label>
+      <input id="edit_email" type="email" required>
+
+      <label>Phone</label>
+      <input id="edit_phone" type="text" required>
+
+      <label>Hostel</label>
+      <select id="edit_hostel">
+        <option value="Boys">Boys</option>
+        <option value="Girls">Girls</option>
+      </select>
+
+      <label>Room Type</label>
+      <select id="edit_room_type">
+        <option value="Single">Single</option>
+        <option value="Double">Double</option>
+        <option value="Triple">Triple</option>
+      </select>
+
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
+        <button type="button" id="cancelEdit" class="btn" style="background:#bbb;">Cancel</button>
+        <button type="submit" class="btn" style="background:#14b784;">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

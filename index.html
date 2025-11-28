@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hostel Management System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Hostel Management System</h1>
+    <p>Welcome to the official student registration portal</p>
+  </header>
+
+  <nav class="navbar">
+  <div class="nav-left">HM</div>
+
+  <!-- Mobile Menu Icon -->
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+
+  <ul class="nav-links" id="navMenu" role="menu">
+    <li role="menuitem"><a href="index.html">Home</a></li>
+    <li role="menuitem"><a href="student_registration.html">Student Registration</a></li>
+    <li role="menuitem"><a href="admin.html">Admin Panel</a></li>
+    <li role="menuitem"><a href="contact.html">Contact Us</a></li>
+    <li role="menuitem"><a href="about.html">About Us</a></li>
+  </ul>
+</nav>
+
+
+  <section class="home-section">
+    <h2>Welcome to Our Hostel !</h2>
+    <p>We provide secure accommodation and essential facilities for students.<br> Register online and book your hostel room easily.</p>
+    <a href="student_registration.html" class="btn">Register Now</a>
+  </section>
+<!-- Hostel Details / Amenities -->
+<section class="features-section">
+  <div class="container">
+    <h3 class="section-title">Our Facilities & Services</h3>
+    <p class="section-sub">Comfortable rooms, fast Wi-Fi, hygienic mess and 24/7 security — everything a student needs.</p>
+
+    <!-- Services cards -->
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="images/wifi.jpg" alt="WiFi" class="service-icon">
+        <h4>Free High-Speed Wi-Fi</h4>
+        <p>Campus-wide fiber connection with high speed internet for study and streaming.</p>
+      </div>
+
+      <div class="service-card">
+        <img src="images/mesh.jpg" alt="Mess" class="service-icon">
+        <h4>Hygienic Mess</h4>
+        <p>Healthy and tasty meals prepared daily with vegetarian and non-vegetarian options.</p>
+      </div>
+
+      <div class="service-card">
+        <img src="images/security.jpg" alt="Security" class="service-icon">
+        <h4>24/7 Security</h4>
+        <p>Round-the-clock security with CCTV and trained staff to ensure safety.</p>
+      </div>
+
+      <div class="service-card">
+        <img src="images/laundary.jpg" alt="Laundry" class="service-icon">
+        <h4>Laundry Service</h4>
+        <p>Onsite laundry facility and pickup/drop service for residents.</p>
+      </div>
+    </div>
+
+    <!-- Room gallery -->
+    <h4 class="gallery-title">Room Gallery</h4>
+    <div class="gallery-grid">
+      <!-- Use local images (recommended) like images/room1.jpg etc.
+           If you don't have images yet, uncomment the Unsplash links below. -->
+      <a href="images/room1.jpg" target="_blank" class="gallery-item">
+        <img src="images/room1.jpg" alt="Room 1">
+      </a>
+      <a href="images/room2.jpg" target="_blank" class="gallery-item">
+        <img src="images/room2.jpg" alt="Room 2">
+      </a>
+      <a href="images/room3.jpg" target="_blank" class="gallery-item">
+        <img src="images/room3.jpg" alt="Room 3">
+      </a>
+      <a href="images/room4.jpg" target="_blank" class="gallery-item">
+        <img src="images/room4.jpg" alt="Room 4">
+      </a>
+
+      <!-- If you want quick test images, replace src/href with these Unsplash images (temporary):
+      <a href="https://images.unsplash.com/photo-1586023492129-4f7b5a3d5b6b" target="_blank" class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1586023492129-4f7b5a3d5b6b?w=600&q=80" alt="Room">
+      </a>
+      -->
+    </div>
+  </div>
+</section>
+  <!-- Features (kept from your original) -->
+  <!-- ... keep same features section as before (optional) ... -->
+  <!-- If you used images folder, ensure images exist in images/ -->
+
+ <footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-column">
+            <h3>Hostel Management System</h3>
+            <p>Providing safe, comfortable and well-maintained hostel facilities to support students in their academic journey.</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Quick Links</h3>
+            <a href="index.html">Home</a>
+            <a href="student_registration.html">Student Registration</a>
+            <a href="admin.html">Admin Panel</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Contact Info</h3>
+            <p>Email: amarjeetsaxena2003@gmail.com</p>
+            <p>Phone: +91 9876543210</p>
+            <p>Address: College Campus, India</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/aj._.sharma._.2.0?igsh=MThsZ3IydDVrcDc3ZQ=="><img src="images/Instagram_icon.png" alt=""></a>
+                <a href="https://www.linkedin.com/in/bihari-sharma-2b5ab736a"><img src="images/LinkedIn_logo_initials.png" alt=""></a>
+                <a href="https://github.com/bihari-sharma"><img src="images/github.png" alt=""></a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Hostel Management System. All Rights Reserved.
+    </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  function toggleMenu() {
+    navMenu.classList.toggle('show');
+    // optional: change toggle icon to X
+    navToggle.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
+  }
+
+  // bind click
+  navToggle.addEventListener('click', toggleMenu);
+
+  // close menu when clicking a link (mobile)
+  navMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      navMenu.classList.remove('show');
+      navToggle.textContent = '☰';
+    }
+  });
+</script>
+
+</body>
+</html>

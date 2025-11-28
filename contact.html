@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<style>
+  body{
+    background-image: url(/images/host.jpg); background-position: center; background-size: cover;
+  }
+  .form-section {
+    background: rgba(255, 255, 255, 1) !important; /* 20% white */
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+}
+</style>
+<body>
+  <header>
+    <h1>Hostel Management System</h1>
+    <p>Contact Us</p>
+  </header>
+
+  <nav class="navbar">
+  <div class="nav-left">HM</div>
+
+  <!-- Mobile Menu Icon -->
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+
+  <ul class="nav-links" id="navMenu" role="menu">
+    <li role="menuitem"><a href="index.html">Home</a></li>
+    <li role="menuitem"><a href="student_registration.html">Student Registration</a></li>
+    <li role="menuitem"><a href="admin.html">Admin Panel</a></li>
+    <li role="menuitem"><a href="contact.html">Contact Us</a></li>
+    <li role="menuitem"><a href="about.html">About Us</a></li>
+  </ul>
+</nav>
+
+  <section class="form-section card">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <label>Your Name*</label>
+      <input id="contactName" type="text" required placeholder="Enter your name"/>
+      <label>Email*</label>
+      <input id="contactEmail" type="email" required placeholder="Enter your email"/>
+      <label>Message</label>
+      <textarea id="contactMessage" rows="5" required placeholder="How can i help you!"></textarea>
+      <button type="submit" class="btn">Send Message</button>
+      <div id="contactMsg" class="success" style="display:none;margin-top:10px;"></div>
+    </form>
+  </section>
+
+  <script type="module">
+    // ====== PASTE YOUR FIREBASE CONFIG HERE ======
+    const firebaseConfig = {
+  apiKey: "AIzaSyBzq69fGQIEdFPDeUn34qOLrvSmiEqxtrM",
+  authDomain: "hostel-management-system-caaf0.firebaseapp.com",
+  projectId: "hostel-management-system-caaf0",
+  storageBucket: "hostel-management-system-caaf0.firebasestorage.app",
+  messagingSenderId: "67188186768",
+  appId: "1:67188186768:web:94cdf87da44b0a573b4215"
+};
+    // =============================================
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const contactForm = document.getElementById('contactForm');
+    const contactMsg = document.getElementById('contactMsg');
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      contactMsg.style.display = 'none';
+      const data = {
+        name: document.getElementById('contactName').value.trim(),
+        email: document.getElementById('contactEmail').value.trim(),
+        message: document.getElementById('contactMessage').value.trim(),
+        created_at: serverTimestamp()
+      };
+      try {
+        await addDoc(collection(db, 'contacts'), data);
+        contactMsg.textContent = 'Message sent — thank you!';
+        contactMsg.style.display = 'block';
+        contactForm.reset();
+      } catch (err) {
+        console.error(err);
+        contactMsg.textContent = 'Error sending message.';
+        contactMsg.style.display = 'block';
+      }
+    });
+  </script>
+
+    <footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-column">
+            <h3>Hostel Management System</h3>
+            <p>Providing safe, comfortable and well-maintained hostel facilities to support students in their academic journey.</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Quick Links</h3>
+            <a href="index.html">Home</a>
+            <a href="student_registration.html">Student Registration</a>
+            <a href="admin.html">Admin Panel</a>
+            <a href="contact.html">Contact Us</a>
+            <a href="about.html">About Us</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Contact Info</h3>
+            <p>Email: amarjeetsaxena2003@gmail.com</p>
+            <p>Phone: +91 9876543210</p>
+            <p>Address: College Campus, India</p>
+        </div>
+
+        <div class="footer-column">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/aj._.sharma._.2.0?igsh=MThsZ3IydDVrcDc3ZQ=="><img src="images/Instagram_icon.png" alt=""></a>
+                <a href="https://www.linkedin.com/in/bihari-sharma-2b5ab736a"><img src="images/LinkedIn_logo_initials.png" alt=""></a>
+                <a href="https://github.com/bihari-sharma"><img src="images/github.png" alt=""></a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2025 Hostel Management System. All Rights Reserved.
+    </div>
+</footer>
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  function toggleMenu() {
+    navMenu.classList.toggle('show');
+    // optional: change toggle icon to X
+    navToggle.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
+  }
+
+  // bind click
+  navToggle.addEventListener('click', toggleMenu);
+
+  // close menu when clicking a link (mobile)
+  navMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      navMenu.classList.remove('show');
+      navToggle.textContent = '☰';
+    }
+  });
+</script>
+</body>
+</html>
